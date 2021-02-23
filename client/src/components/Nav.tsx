@@ -2,16 +2,22 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
-const Nav = () => {
+const Nav: React.FC<{ setId: any; id: null | string }> = ({ setId, id }) => {
+  const logOut = () => {
+    setId(null);
+  };
+
   return (
     <StyledNav>
       <h1>
         <a href="/">Messenger</a>
       </h1>
-      <div className="profile">
-        <FontAwesomeIcon icon={faUserCircle} />
-        <StyledButton>Log Out</StyledButton>
-      </div>
+      {id && (
+        <div className="profile">
+          <FontAwesomeIcon icon={faUserCircle} />
+          <StyledButton onClick={logOut}>Log Out</StyledButton>
+        </div>
+      )}
     </StyledNav>
   );
 };
