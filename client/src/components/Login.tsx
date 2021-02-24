@@ -1,27 +1,47 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-
+import { motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 
 const Login: React.FC<{ setId: any }> = ({ setId }) => {
+  //State
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  //Refs
   const idRef = useRef<HTMLInputElement>(null);
+
+  //Effect
+  useEffect(() => {
+    setIsVisible(true);
+    return () => setIsVisible(false);
+  }, []);
 
   const SubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (idRef.current) setId(idRef.current.value);
+    if (idRef.current && idRef.current.value !== "") setId(idRef.current.value);
+    else alert("Please Enter an Id");
   };
 
   const newId = () => {
     setId(uuid());
   };
 
+  const variants = {
+    visible: { opacity: 1, transition: { duration: 0.7, ease: "easeInOut" } },
+    hidden: { opacity: 0 },
+  };
+
   return (
-    <StyledLogin>
+    <StyledLogin
+      variants={variants}
+      initial="hidden"
+      animate={isVisible ? "visible" : "hidden"}
+    >
       <StyledForm onSubmit={SubmitHandler}>
         <h1>Login</h1>
         <div className="formField">
           <label htmlFor="">Enter Your Id: </label>
-          <input type="text" ref={idRef} />
+          <input type="text" ref={idRef} autoFocus />
         </div>
         <div className="buttonContainer">
           <button>Go</button>
@@ -36,7 +56,7 @@ const Login: React.FC<{ setId: any }> = ({ setId }) => {
   );
 };
 
-const StyledLogin = styled.div`
+const StyledLogin = styled(motion.div)`
   width: 100%;
   height: calc(100vh - var(--navHeight));
   background: #fff;
@@ -52,7 +72,11 @@ const StyledLogin = styled.div`
     left: 0;
     width: 80%;
     aspect-ratio: 1/1;
-    background: #ffa17e;
+    background: linear-gradient(
+      to right,
+      rgb(251, 215, 134),
+      rgb(247, 121, 125)
+    );
     border-radius: 50%;
   }
   .circle2 {
@@ -63,7 +87,11 @@ const StyledLogin = styled.div`
     right: 0;
     width: 50%;
     aspect-ratio: 1/1;
-    background: #ffff7c;
+    background: linear-gradient(
+      179deg,
+      rgba(253, 196, 10, 0.7) 9.6%,
+      rgb(245, 211, 87) 50.1%
+    );
     border-radius: 50%;
   }
 `;
@@ -105,8 +133,11 @@ const StyledForm = styled.form`
     border: 0;
     border-bottom: 2px solid #009dc7;
     background: transparent;
+    transition: background 0.3s ease-out;
     &:focus {
       outline: 0;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(1px);
     }
   }
   .buttonContainer {

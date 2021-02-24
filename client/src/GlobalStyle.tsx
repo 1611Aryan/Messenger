@@ -28,6 +28,7 @@ body{
         outline:0;
     }
 }
+
 `;
 
 export default GlobalStyle;
